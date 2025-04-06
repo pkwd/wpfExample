@@ -1,4 +1,5 @@
-﻿using System.Configuration;
+﻿using System;
+using System.Configuration;
 using System.Data;
 using System.Windows;
 using Microsoft.Extensions.DependencyInjection;
@@ -15,67 +16,50 @@ namespace WpfKantarExample
     {
         private ServiceProvider? _serviceProvider;
 
-        public ServiceProvider Services => _serviceProvider ?? throw new InvalidOperationException("ServiceProvider not initialized");
-
-        private ServiceProvider ConfigureServices()
-        {
-            var services = new ServiceCollection();
-
-            // Register services
-            services.AddSingleton<IThemeService, ThemeService>();
-            services.AddSingleton<IStateService, StateService>();
-
-            // Register views and viewmodels
-            services.AddSingleton<MainWindow>();
-            services.AddTransient<TaskListView>();
-            services.AddTransient<TaskListViewModel>();
-
-            // Register navigation service
-            services.AddSingleton<INavigationService>(sp =>
-            {
-                var mainWindow = sp.GetRequiredService<MainWindow>();
-                return new NavigationService(sp, mainWindow.MainContent);
-            });
-
-            return services.BuildServiceProvider();
-        }
-
         protected override void OnStartup(StartupEventArgs e)
         {
             base.OnStartup(e);
 
-            try
-            {
-                // Initialize service provider
-                _serviceProvider = ConfigureServices();
+            var services = new ServiceCollection();
 
-                // Create and show main window first
-                var mainWindow = Services.GetRequiredService<MainWindow>();
-                mainWindow.Show();
+            // Create main window first
+            var mainWindow = new MainWindow();
 
-                // Initialize main window services
-                mainWindow.InitializeServices(Services);
+            // Configure services including navigation service
+            ConfigureServices(services, mainWindow);
 
-                // Set initial theme
-                var themeService = Services.GetRequiredService<IThemeService>();
-                themeService.SetTheme(ThemeType.Light);
+            _serviceProvider = services.BuildServiceProvider();
 
-                // Get navigation service and navigate to initial view
-                var navigationService = Services.GetRequiredService<INavigationService>();
-                navigationService.NavigateTo(nameof(TaskListView));
-            }
-            catch (Exception ex)
-            {
-                MessageBox.Show($"Application failed to start: {ex.Message}", "Startup Error",
-                    MessageBoxButton.OK, MessageBoxImage.Error);
-                Current.Shutdown();
-            }
+            // Initialize main window services
+            mainWindow.InitializeServices(_serviceProvider);
+            
+            // Show window and navigate to initial view
+            mainWindow.Show();
+            var navigationService = _serviceProvider.GetRequiredService<INavigationService>();
+            navigationService.NavigateTo<TaskListView>();
+        }
+
+        private void ConfigureServices(IServiceCollection services, MainWindow mainWindow)
+        {
+            // Register services
+            services.AddSingleton<IStateService, StateService>();
+            services.AddSingleton<IThemeService, ThemeService>();
+            services.AddSingleton<INavigationService>(sp => 
+                new NavigationService(sp, mainWindow.MainContent));
+
+            // Register views
+            services.AddTransient<TaskListView>();
+            services.AddTransient<TaskGridView>();
+
+            // Register view models
+            services.AddTransient<TaskListViewModel>();
+            services.AddTransient<TaskGridViewModel>();
         }
 
         protected override void OnExit(ExitEventArgs e)
         {
-            base.OnExit(e);
             _serviceProvider?.Dispose();
+            base.OnExit(e);
         }
     }
 }

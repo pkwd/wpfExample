@@ -2,6 +2,7 @@
 using System.Windows;
 using Microsoft.Extensions.DependencyInjection;
 using WpfKantarExample.Services;
+using System.ComponentModel;
 
 namespace WpfKantarExample
 {
@@ -18,6 +19,8 @@ namespace WpfKantarExample
             InitializeComponent();
             Debug.WriteLine("MainWindow created");
             Debug.WriteLine($"MainContent control name: {MainContent.Name}");
+            // Ensure DataContext is set for potential bindings
+            DataContext = this;
         }
 
         public void InitializeServices(IServiceProvider serviceProvider)
@@ -26,17 +29,30 @@ namespace WpfKantarExample
             _themeService = serviceProvider.GetRequiredService<IThemeService>();
             _navigationService = serviceProvider.GetRequiredService<INavigationService>();
 
-            // Update back button visibility
+            // Subscribe to navigation service property changes
+            if (_navigationService is INotifyPropertyChanged notifyNavigation)
+            {
+                notifyNavigation.PropertyChanged += NavigationService_PropertyChanged;
+            }
+
+            // Update back button state initially
             UpdateBackButtonState();
             Debug.WriteLine("MainWindow services initialized");
         }
 
+        private void NavigationService_PropertyChanged(object? sender, PropertyChangedEventArgs e)
+        {
+            if (e.PropertyName == nameof(INavigationService.CanGoBack))
+            {
+                // Ensure UI updates happen on the UI thread
+                Dispatcher.Invoke(UpdateBackButtonState);
+            }
+        }
+
         private void UpdateBackButtonState()
         {
-            if (_navigationService != null)
-            {
-                BackButton.IsEnabled = _navigationService.CanGoBack;
-            }
+            BackButton.IsEnabled = _navigationService?.CanGoBack ?? false;
+            Debug.WriteLine($"Back button IsEnabled set to: {BackButton.IsEnabled}");
         }
 
         private void ThemeToggleButton_Click(object sender, RoutedEventArgs e)
@@ -58,12 +74,18 @@ namespace WpfKantarExample
 
         private void BackButton_Click(object sender, RoutedEventArgs e)
         {
-            if (_navigationService?.CanGoBack == true)
+            Debug.WriteLine("Back button clicked");
+            _navigationService?.GoBack();
+        }
+
+        // Unsubscribe when the window closes
+        protected override void OnClosed(EventArgs e)
+        {
+            if (_navigationService is INotifyPropertyChanged notifyNavigation)
             {
-                _navigationService.GoBack();
-                UpdateBackButtonState();
-                Debug.WriteLine("Navigated back");
+                notifyNavigation.PropertyChanged -= NavigationService_PropertyChanged;
             }
+            base.OnClosed(e);
         }
     }
 }

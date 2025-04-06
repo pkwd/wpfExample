@@ -1,16 +1,21 @@
+using System;
+using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Diagnostics;
+using System.Threading.Tasks;
 using System.Windows;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using WpfKantarExample.Models;
 using WpfKantarExample.Services;
+using WpfKantarExample.Views;
 
 namespace WpfKantarExample.ViewModels
 {
     public partial class TaskListViewModel : ViewModelBase
     {
         private readonly IStateService _stateService;
+        private readonly INavigationService _navigationService;
         private const string STATE_KEY = "tasks";
 
         [ObservableProperty]
@@ -19,9 +24,10 @@ namespace WpfKantarExample.ViewModels
         [ObservableProperty]
         private string _newTaskTitle = string.Empty;
 
-        public TaskListViewModel(IStateService stateService)
+        public TaskListViewModel(IStateService stateService, INavigationService navigationService)
         {
             _stateService = stateService;
+            _navigationService = navigationService;
             Title = "Task List";
             LoadTasks();
         }
@@ -60,10 +66,19 @@ namespace WpfKantarExample.ViewModels
         }
 
         [RelayCommand]
-        private async Task DeleteTask(TaskItem task)
+        private void DeleteTask(TaskItem task)
         {
-            Tasks.Remove(task);
-            await SaveTasksAsync();
+            if (task != null)
+            {
+                _stateService.DeleteTask(task);
+                Tasks.Remove(task);
+            }
+        }
+
+        [RelayCommand]
+        private void SwitchToGridView()
+        {
+            _navigationService.NavigateTo<TaskGridView>();
         }
 
         private async Task LoadTasksAsync()

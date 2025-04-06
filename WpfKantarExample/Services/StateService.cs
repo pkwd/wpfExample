@@ -1,7 +1,10 @@
 using System;
+using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Text.Json;
 using System.Threading.Tasks;
+using WpfKantarExample.Models;
 
 namespace WpfKantarExample.Services
 {
@@ -10,11 +13,13 @@ namespace WpfKantarExample.Services
         Task SaveStateAsync<T>(string key, T state);
         Task<T?> LoadStateAsync<T>(string key);
         void ClearState(string key);
+        void DeleteTask(TaskItem task);
     }
 
     public class StateService : IStateService
     {
         private readonly string _stateDirectory;
+        private const string TASKS_KEY = "tasks";
 
         public StateService()
         {
@@ -64,6 +69,23 @@ namespace WpfKantarExample.Services
             var filePath = GetStateFilePath(key);
             if (File.Exists(filePath))
                 File.Delete(filePath);
+        }
+
+        public async void DeleteTask(TaskItem task)
+        {
+            try
+            {
+                var tasks = await LoadStateAsync<List<TaskItem>>(TASKS_KEY);
+                if (tasks != null)
+                {
+                    tasks.RemoveAll(t => t.Title == task.Title && t.CreatedAt == task.CreatedAt);
+                    await SaveStateAsync(TASKS_KEY, tasks);
+                }
+            }
+            catch (Exception ex)
+            {
+                System.Diagnostics.Debug.WriteLine($"Error deleting task: {ex.Message}");
+            }
         }
     }
 } 

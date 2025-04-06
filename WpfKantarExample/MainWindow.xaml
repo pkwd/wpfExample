@@ -17,18 +17,19 @@
         <!-- Header with theme toggle -->
         <Border Grid.Row="0" 
                 Background="{DynamicResource SecondaryBackgroundBrush}"
-                Padding="10">
-            <StackPanel Orientation="Horizontal">
+                BorderThickness="0,0,0,1"
+                BorderBrush="{DynamicResource BorderBrush}">
+            <StackPanel Orientation="Horizontal" Margin="10">
                 <Button x:Name="ThemeToggleButton" 
                         Content="Toggle Theme"
                         Click="ThemeToggleButton_Click"
-                        Padding="10,5"/>
+                        Style="{StaticResource ButtonSecondary}" Background="#FFA09C9C"/>
                 
                 <Button x:Name="BackButton"
                         Content="Back"
                         Click="BackButton_Click"
                         Margin="10,0,0,0"
-                        Padding="10,5"/>
+                        Style="{StaticResource ButtonSecondary}"/>
             </StackPanel>
         </Border>
 

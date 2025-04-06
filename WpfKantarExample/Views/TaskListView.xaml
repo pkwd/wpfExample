@@ -23,20 +23,24 @@
                 <ColumnDefinition Width="Auto"/>
             </Grid.ColumnDefinitions>
 
-            <TextBox Text="{Binding NewTaskTitle, UpdateSourceTrigger=PropertyChanged}"
-                     Margin="0,0,10,0"
-                     Padding="5">
-                <behaviors:Interaction.Triggers>
-                    <behaviors:KeyTrigger Key="Return">
-                        <behaviors:InvokeCommandAction Command="{Binding AddTaskCommand}"/>
-                    </behaviors:KeyTrigger>
-                </behaviors:Interaction.Triggers>
-            </TextBox>
-
-            <Button Grid.Column="1"
-                    Content="Add Task"
-                    Command="{Binding AddTaskCommand}"
-                    Padding="15,5"/>
+            <StackPanel Grid.Column="0" Orientation="Horizontal" Margin="10">
+                <TextBox Text="{Binding NewTaskTitle, UpdateSourceTrigger=PropertyChanged}"
+                         Width="200"
+                         Margin="0,0,10,0">
+                    <behaviors:Interaction.Triggers>
+                        <behaviors:KeyTrigger Key="Return">
+                            <behaviors:InvokeCommandAction Command="{Binding AddTaskCommand}"/>
+                        </behaviors:KeyTrigger>
+                    </behaviors:Interaction.Triggers>
+                </TextBox>
+                <Button Content="Add Task"
+                        Command="{Binding AddTaskCommand}"
+                        Style="{StaticResource ButtonPrimary}"
+                        Margin="0,0,10,0"/>
+                <Button Content="Switch to Grid View"
+                        Command="{Binding SwitchToGridViewCommand}"
+                        Style="{StaticResource ButtonSecondary}"/>
+            </StackPanel>
         </Grid>
 
         <!-- Task list -->

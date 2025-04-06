@@ -1,6 +1,8 @@
+using System;
 using System.Globalization;
 using System.Windows;
 using System.Windows.Data;
+using System.Windows.Documents;
 
 namespace WpfKantarExample.Helpers
 {
@@ -21,7 +23,7 @@ namespace WpfKantarExample.Helpers
     {
         public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
         {
-            return value is bool boolValue && boolValue ? new TextDecorationCollection { TextDecorations.Strikethrough } : null;
+            return value is bool boolValue && boolValue ? TextDecorations.Strikethrough : new TextDecorationCollection();
         }
 
         public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)

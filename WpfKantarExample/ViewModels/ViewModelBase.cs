@@ -9,5 +9,9 @@ namespace WpfKantarExample.ViewModels
 
         [ObservableProperty]
         private string _title = string.Empty;
+
+        public virtual void OnNavigatedTo()
+        {
+        }
     }
 } 

@@ -6,13 +6,16 @@
     <Color x:Key="SecondaryBackgroundColor">#F5F5F5</Color>
     <Color x:Key="PrimaryTextColor">#000000</Color>
     <Color x:Key="SecondaryTextColor">#666666</Color>
+    <Color x:Key="BorderColor">#DDDDDD</Color>
     <Color x:Key="AccentColor">#007ACC</Color>
+    <Color x:Key="DangerColor">#DC3545</Color>
     
     <!-- Brushes -->
     <SolidColorBrush x:Key="PrimaryBackgroundBrush" Color="{StaticResource PrimaryBackgroundColor}"/>
     <SolidColorBrush x:Key="SecondaryBackgroundBrush" Color="{StaticResource SecondaryBackgroundColor}"/>
     <SolidColorBrush x:Key="PrimaryTextBrush" Color="{StaticResource PrimaryTextColor}"/>
     <SolidColorBrush x:Key="SecondaryTextBrush" Color="{StaticResource SecondaryTextColor}"/>
+    <SolidColorBrush x:Key="BorderBrush" Color="{StaticResource BorderColor}"/>
     <SolidColorBrush x:Key="AccentBrush" Color="{StaticResource AccentColor}"/>
-    
+    <SolidColorBrush x:Key="DangerBrush" Color="{StaticResource DangerColor}"/>
 </ResourceDictionary> 
