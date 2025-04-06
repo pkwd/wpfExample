@@ -54,6 +54,7 @@ namespace WpfKantarExample
             // Register view models
             services.AddTransient<TaskListViewModel>();
             services.AddTransient<TaskGridViewModel>();
+            services.AddSingleton<MainWindowViewModel>();
         }
 
         protected override void OnExit(ExitEventArgs e)

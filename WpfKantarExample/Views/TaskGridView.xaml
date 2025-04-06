@@ -14,7 +14,6 @@
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto"/>
             <RowDefinition Height="*"/>
-            <RowDefinition Height="1*"/>
         </Grid.RowDefinitions>
 
         <!-- Header with Add Task Button -->
@@ -35,6 +34,9 @@
                   CanUserAddRows="False"
                   CanUserDeleteRows="False"
                   IsReadOnly="False"
+                  VerticalAlignment="Stretch"
+                  HorizontalAlignment="Stretch"
+                  VerticalScrollBarVisibility="Auto"
                   Margin="10">
             <DataGrid.Columns>
                 <DataGridTemplateColumn Header="Completed" Width="Auto">
@@ -45,6 +47,7 @@
                                               RelativeSource={RelativeSource AncestorType=DataGrid}}"
                                     CommandParameter="{Binding}"
                                     VerticalAlignment="Center"
+                                    HorizontalAlignment="Center"
                                     Margin="5"/>
                         </DataTemplate>
                     </DataGridTemplateColumn.CellTemplate>
@@ -72,7 +75,7 @@
         </DataGrid>
 
         <!-- Loading overlay -->
-        <Grid Grid.RowSpan="2"
+        <Grid Grid.Row="0" Grid.RowSpan="2"
               Background="#80000000"
               Visibility="{Binding IsBusy, Converter={StaticResource BoolToVisibilityConverter}}">
             <ProgressBar IsIndeterminate="True"

@@ -4,9 +4,11 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:WpfKantarExample"
+        xmlns:vm="clr-namespace:WpfKantarExample.ViewModels"
         mc:Ignorable="d"
         Title="WPF Kantar Example" Height="450" Width="800"
-        Background="{DynamicResource PrimaryBackgroundBrush}">
+        Background="{DynamicResource PrimaryBackgroundBrush}"
+        d:DataContext="{d:DesignInstance Type=vm:MainWindowViewModel}">
     
     <Grid>
         <Grid.RowDefinitions>
@@ -22,12 +24,14 @@
             <StackPanel Orientation="Horizontal" Margin="10">
                 <Button x:Name="ThemeToggleButton" 
                         Content="Toggle Theme"
-                        Click="ThemeToggleButton_Click"
-                        Style="{StaticResource ButtonSecondary}" Background="#FFA09C9C"/>
+                        Command="{Binding ToggleThemeCommand}"
+                        Style="{StaticResource ButtonSecondary}" 
+                        Background="#FFA09C9C"/>
                 
                 <Button x:Name="BackButton"
                         Content="Back"
-                        Click="BackButton_Click"
+                        Command="{Binding GoBackCommand}"
+                        IsEnabled="{Binding CanGoBack}"
                         Margin="10,0,0,0"
                         Style="{StaticResource ButtonSecondary}"/>
             </StackPanel>
