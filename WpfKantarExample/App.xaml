@@ -1,0 +1,17 @@
+﻿<Application x:Class="WpfKantarExample.App"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:local="clr-namespace:WpfKantarExample"
+             xmlns:helpers="clr-namespace:WpfKantarExample.Helpers">
+    <Application.Resources>
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary Source="/Themes/LightTheme.xaml"/>
+            </ResourceDictionary.MergedDictionaries>
+
+            <!-- Converters -->
+            <helpers:BoolToVisibilityConverter x:Key="BoolToVisibilityConverter"/>
+            <helpers:BoolToStrikethroughConverter x:Key="BoolToStrikethroughConverter"/>
+        </ResourceDictionary>
+    </Application.Resources>
+</Application>
