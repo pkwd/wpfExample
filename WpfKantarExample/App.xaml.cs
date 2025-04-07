@@ -1,8 +1,11 @@
 ﻿using System;
 using System.Configuration;
 using System.Data;
+using System.IO;
 using System.Windows;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
+using WpfKantarExample.Data;
 using WpfKantarExample.Services;
 using WpfKantarExample.ViewModels;
 using WpfKantarExample.Views;
@@ -41,8 +44,13 @@ namespace WpfKantarExample
 
         private void ConfigureServices(IServiceCollection services, MainWindow mainWindow)
         {
+            // Register database context
+            var dbPath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "tasks.db");
+            services.AddDbContextFactory<ApplicationDbContext>(options =>
+                options.UseSqlite($"Data Source={dbPath}"));
+
             // Register services
-            services.AddSingleton<IStateService, StateService>();
+            services.AddSingleton<IStateService, DbStateService>();
             services.AddSingleton<IThemeService, ThemeService>();
             services.AddSingleton<INavigationService>(sp => 
                 new NavigationService(sp, mainWindow.MainContent));
